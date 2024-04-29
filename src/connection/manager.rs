@@ -148,6 +148,8 @@ fn send_and_receive_loop(manager: &mut Manager, rx: &Receiver<()>) {
                         break;
                     }
                     error!("Failed to connect: {:?}", err);
+
+                    thread::sleep(time::Duration::from_millis(500));
                 }
                 _ => manager.handshake_completed = true,
             },
