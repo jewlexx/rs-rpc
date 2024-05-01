@@ -1,6 +1,7 @@
 use std::{
     sync::{atomic::Ordering, Arc},
     thread::{JoinHandle, Thread},
+    time::Duration,
 };
 
 use crate::{
@@ -97,11 +98,26 @@ pub struct Client {
 impl bevy::ecs::system::Resource for Client {}
 
 impl Client {
-    /// Creates a new `Client`
+    /// Creates a new `Client` with default error sleep duration of 5 seconds, and no limit on connection attempts
     #[must_use]
     pub fn new(client_id: u64) -> Self {
+        Self::with_error_config(client_id, Duration::from_secs(5), None)
+    }
+
+    /// Creates a new `Client` with a custom error sleep duration, and number of attempts
+    #[must_use]
+    pub fn with_error_config(
+        client_id: u64,
+        sleep_duration: Duration,
+        attempts: Option<usize>,
+    ) -> Self {
         let event_handler_registry = Arc::new(HandlerRegistry::new());
-        let connection_manager = ConnectionManager::new(client_id, event_handler_registry.clone());
+        let connection_manager = ConnectionManager::new(
+            client_id,
+            event_handler_registry.clone(),
+            sleep_duration,
+            attempts,
+        );
 
         Self {
             connection_manager,

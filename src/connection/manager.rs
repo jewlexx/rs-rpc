@@ -10,7 +10,8 @@ use serde_json::Value as JsonValue;
 use std::{
     io::ErrorKind,
     sync::{atomic::Ordering, Arc},
-    thread, time,
+    thread,
+    time::{self, Duration},
 };
 
 type Tx = Sender<Message>;
@@ -25,10 +26,17 @@ pub struct Manager {
     inbound: (Rx, Tx),
     handshake_completed: bool,
     event_handler_registry: Arc<HandlerRegistry>,
+    error_sleep: Duration,
+    connection_attempts: Arc<Mutex<Option<usize>>>,
 }
 
 impl Manager {
-    pub fn new(client_id: u64, event_handler_registry: Arc<HandlerRegistry>) -> Self {
+    pub fn new(
+        client_id: u64,
+        event_handler_registry: Arc<HandlerRegistry>,
+        error_sleep: Duration,
+        connection_attempts: Option<usize>,
+    ) -> Self {
         let connection = Arc::new(None);
         let (sender_o, receiver_o) = unbounded();
         let (sender_i, receiver_i) = unbounded();
@@ -40,14 +48,18 @@ impl Manager {
             inbound: (receiver_i, sender_i),
             outbound: (receiver_o, sender_o),
             event_handler_registry,
+            error_sleep,
+            connection_attempts: Arc::new(Mutex::new(connection_attempts)),
         }
     }
 
     pub fn start(&mut self, rx: Receiver<()>) -> std::thread::JoinHandle<()> {
         let mut manager_inner = self.clone();
+        let error_sleep = self.error_sleep;
+        let connection_attempts = self.connection_attempts.clone();
         thread::spawn(move || {
             // TODO: Refactor so that JSON values are consistent across errors
-            send_and_receive_loop(&mut manager_inner, &rx);
+            send_and_receive_loop(&mut manager_inner, &rx, error_sleep, &connection_attempts);
         })
     }
 
@@ -101,7 +113,12 @@ impl Manager {
     }
 }
 
-fn send_and_receive_loop(manager: &mut Manager, rx: &Receiver<()>) {
+fn send_and_receive_loop(
+    manager: &mut Manager,
+    rx: &Receiver<()>,
+    err_sleep: Duration,
+    connection_attempts: &Arc<Mutex<Option<usize>>>,
+) {
     trace!("Starting sender loop");
 
     let mut inbound = manager.inbound.1.clone();
@@ -148,6 +165,17 @@ fn send_and_receive_loop(manager: &mut Manager, rx: &Receiver<()>) {
                         break;
                     }
                     error!("Failed to connect: {:?}", err);
+
+                    let mut attempts = connection_attempts.lock();
+                    if let Some(ref mut attempts) = *attempts {
+                        if *attempts == 0 {
+                            break;
+                        }
+
+                        *attempts -= 1;
+                    }
+
+                    thread::sleep(err_sleep);
                 }
                 _ => manager.handshake_completed = true,
             },
