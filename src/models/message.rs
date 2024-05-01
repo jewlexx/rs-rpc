@@ -53,7 +53,6 @@ impl Message {
     /// # Panics
     /// - The payload length is not a 32 bit number
     pub fn encode(&self) -> Result<Vec<u8>> {
-        use std::convert::TryFrom;
         let mut bytes: Vec<u8> = vec![];
 
         let payload_length = u32::try_from(self.payload.len()).expect("32-bit payload length");
