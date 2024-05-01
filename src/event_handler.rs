@@ -111,11 +111,10 @@ impl HandlerRegistry {
     ) -> crate::Result<Arc<Handler>> {
         let mut handlers = self.handlers.write();
         if let Some(handlers) = handlers.get_mut(&event) {
-            if let Some(index) = handlers.iter().position(|handler| {
-                // Allowed address comparison as we need to compare the function pointers, rather than the actual functions
-                #[allow(clippy::vtable_address_comparisons)]
-                Arc::ptr_eq(handler, target)
-            }) {
+            if let Some(index) = handlers
+                .iter()
+                .position(|handler| Arc::ptr_eq(handler, target))
+            {
                 return Ok(handlers.remove(index));
             }
         }
