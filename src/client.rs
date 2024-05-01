@@ -98,10 +98,10 @@ pub struct Client {
 impl bevy::ecs::system::Resource for Client {}
 
 impl Client {
-    /// Creates a new `Client`
+    /// Creates a new `Client` with default error sleep duration of 5 seconds, and no limit on connection attempts
     #[must_use]
     pub fn new(client_id: u64) -> Self {
-        Self::with_error_config(client_id, Duration::from_millis(500), None)
+        Self::with_error_config(client_id, Duration::from_secs(5), None)
     }
 
     /// Creates a new `Client` with a custom error sleep duration, and number of attempts
