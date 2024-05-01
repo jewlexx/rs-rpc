@@ -101,15 +101,23 @@ impl Client {
     /// Creates a new `Client`
     #[must_use]
     pub fn new(client_id: u64) -> Self {
-        Self::with_error_sleep(client_id, Duration::from_millis(500))
+        Self::with_error_config(client_id, Duration::from_millis(500), None)
     }
 
-    /// Creates a new `Client` with a custom error sleep duration
+    /// Creates a new `Client` with a custom error sleep duration, and number of attempts
     #[must_use]
-    pub fn with_error_sleep(client_id: u64, error_sleep: Duration) -> Self {
+    pub fn with_error_config(
+        client_id: u64,
+        sleep_duration: Duration,
+        attempts: Option<usize>,
+    ) -> Self {
         let event_handler_registry = Arc::new(HandlerRegistry::new());
-        let connection_manager =
-            ConnectionManager::new(client_id, event_handler_registry.clone(), error_sleep);
+        let connection_manager = ConnectionManager::new(
+            client_id,
+            event_handler_registry.clone(),
+            sleep_duration,
+            attempts,
+        );
 
         Self {
             connection_manager,
