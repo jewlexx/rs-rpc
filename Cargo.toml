@@ -1,7 +1,7 @@
 [package]
 authors = ["Juliette Cordor", "Patrick Auernig <dev.patrick.auernig@gmail.com>"]
 description = "A Rust client for Discord RPC."
-edition = "2018"
+edition = "2021"
 keywords = ["discord", "ipc", "rpc"]
 license = "MIT"
 name = "discord-presence"
