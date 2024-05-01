@@ -8,7 +8,7 @@ name = "discord-presence"
 readme = "README.md"
 repository = "https://github.com/jewlexx/discord-presence.git"
 rust-version = "1.66.1"
-version = "1.1.2"
+version = "1.2.0"
 
 [dependencies]
 byteorder = "1.5"
