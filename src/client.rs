@@ -1,6 +1,7 @@
 use std::{
     sync::{atomic::Ordering, Arc},
     thread::{JoinHandle, Thread},
+    time::Duration,
 };
 
 use crate::{
@@ -100,8 +101,15 @@ impl Client {
     /// Creates a new `Client`
     #[must_use]
     pub fn new(client_id: u64) -> Self {
+        Self::with_error_sleep(client_id, Duration::from_millis(500))
+    }
+
+    /// Creates a new `Client` with a custom error sleep duration
+    #[must_use]
+    pub fn with_error_sleep(client_id: u64, error_sleep: Duration) -> Self {
         let event_handler_registry = Arc::new(HandlerRegistry::new());
-        let connection_manager = ConnectionManager::new(client_id, event_handler_registry.clone());
+        let connection_manager =
+            ConnectionManager::new(client_id, event_handler_registry.clone(), error_sleep);
 
         Self {
             connection_manager,
