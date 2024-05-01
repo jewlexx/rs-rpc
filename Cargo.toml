@@ -28,7 +28,7 @@ thiserror = "1.0"
 tracing = "0.1"
 
 [target.'cfg(windows)'.dependencies]
-named_pipe = "0.4"
+named_pipe = "0.4.1"
 
 [dependencies.serde]
 features = ["derive"]
