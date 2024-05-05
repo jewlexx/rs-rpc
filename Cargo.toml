@@ -19,7 +19,7 @@ num-derive = "0.4"
 num-traits = "0.2"
 parking_lot = "0.12"
 paste = "1.0"
-quork = { version = "0.6", default-features = false, features = [
+quork = { version = "0.7", default-features = false, features = [
     "macros",
     "traits",
 ] }
