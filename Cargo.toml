@@ -21,6 +21,7 @@ parking_lot = "0.12"
 paste = "1.0"
 quork = { version = "0.7", default-features = false, features = [
     "macros",
+    "std",
     "traits",
 ] }
 serde_json = "1.0"
