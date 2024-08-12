@@ -1,6 +1,7 @@
 use std::default::Default;
 
 use serde::Deserializer;
+use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use super::events::PartialUser;
 use crate::utils;
@@ -56,6 +57,21 @@ impl SendActivityJoinInviteArgs {
     }
 }
 
+/// ActivityType enum
+#[repr(u8)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize_repr, Serialize_repr, Hash)]
+#[serde(untagged)]
+pub enum ActivityType {
+    /// Playing a game
+    Playing = 0,
+    /// Listening to...
+    Listening = 2,
+    /// Watching...
+    Watching = 3,
+    /// Competing in...
+    Competing = 5,
+}
+
 builder! {ActivityJoinEvent
     secret: String,
 }
@@ -72,6 +88,7 @@ builder! {Activity
     state: String,
     details: String,
     instance: bool,
+    _type: ActivityType alias = "type",
     timestamps: ActivityTimestamps func,
     assets: ActivityAssets func,
     party: ActivityParty func,
