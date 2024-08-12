@@ -181,6 +181,7 @@ mod tests {
             .state("rusting")
             .details("detailed")
             .instance(true)
+            ._type(ActivityType::Watching)
             .timestamps(|t| t.start(1000).end(2000))
             .assets(|a| {
                 a.large_image("ferris")
