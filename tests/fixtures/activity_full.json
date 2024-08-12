@@ -2,6 +2,7 @@
     "state": "rusting",
     "details": "detailed",
     "instance": true,
+    "type": 3,
     "timestamps": {
         "start": 1000,
         "end": 2000
