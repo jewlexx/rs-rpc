@@ -1,6 +1,8 @@
 use std::default::Default;
 
 use serde::Deserializer;
+
+#[cfg(feature = "activity_type")]
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use super::events::PartialUser;
@@ -58,9 +60,9 @@ impl SendActivityJoinInviteArgs {
 }
 
 /// ActivityType enum
+#[cfg(feature = "activity_type")]
 #[repr(u8)]
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize_repr, Serialize_repr, Hash)]
-#[serde(untagged)]
 pub enum ActivityType {
     /// Playing a game
     Playing = 0,
@@ -88,7 +90,7 @@ builder! {Activity
     state: String,
     details: String,
     instance: bool,
-    _type: ActivityType alias = "type",
+    _type: ActivityType alias = "type" => if feature = "activity_type",
     timestamps: ActivityTimestamps func,
     assets: ActivityAssets func,
     party: ActivityParty func,

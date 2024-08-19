@@ -10,6 +10,9 @@ repository = "https://github.com/jewlexx/discord-presence.git"
 rust-version = "1.66.1"
 version = "1.2.0"
 
+[features]
+activity_type = ["dep:serde_repr"]
+
 [dependencies]
 byteorder = "1.5"
 bytes = "1.6"
@@ -25,7 +28,7 @@ quork = { version = "0.7", default-features = false, features = [
     "traits",
 ] }
 serde_json = "1.0"
-serde_repr = "0.1"
+serde_repr = { version = "0.1", optional = true }
 thiserror = "1.0"
 tracing = "0.1"
 
