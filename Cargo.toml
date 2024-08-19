@@ -13,6 +13,10 @@ version = "1.2.0"
 [features]
 activity_type = ["dep:serde_repr"]
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 byteorder = "1.5"
 bytes = "1.6"
