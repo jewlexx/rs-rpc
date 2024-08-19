@@ -183,7 +183,6 @@ mod tests {
             .state("rusting")
             .details("detailed")
             .instance(true)
-            ._type(ActivityType::Watching)
             .timestamps(|t| t.start(1000).end(2000))
             .assets(|a| {
                 a.large_image("ferris")
@@ -209,3 +208,19 @@ mod tests {
         assert_eq![json, "{}"];
     }
 }
+
+#[cfg(test)]
+#[cfg(feature = "activity_type")]
+mod activity_type_tests {
+    use super::*;
+
+    #[test]
+    fn can_serialize_activity_type() {
+        let activity = Activity::new()
+            ._type(ActivityType::Watching);
+        let json = serde_json::to_string(&activity).expect("Failed to serialize into String");
+
+        assert_eq![json, r#"{"type":3}"#];
+    }
+}
+
