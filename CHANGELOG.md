@@ -9,7 +9,35 @@ I will add links where possible, including retroactively if possible.
 
 ## [Unreleased](https://github.com/jewlexx/discord-presence/tree/trunk)
 
-## [0.6.0]
+## [1.2.0](https://github.com/jewlexx/discord-presence/releases/tag/v1.2.0)
+
+### Changed
+
+- Sleep on connection failure
+
+## [1.1.2](https://github.com/jewlexx/discord-presence/releases/tag/v1.1.2)
+
+### Fixed
+
+- Missing buttons field
+
+## [1.1.1](https://github.com/jewlexx/discord-presence/releases/tag/v1.1.1)
+
+### Fixed
+
+- Shutdown function incorrectly throwing NotStarted error
+
+## [1.1.0](https://github.com/jewlexx/discord-presence/releases/tag/v1.1.0)
+
+### Fixed
+
+- Debug printing in release
+
+### Added
+
+- PartialUser struct
+
+## [1.0.0](https://github.com/jewlexx/discord-presence/releases/tag/v1.0.0)
 
 ### Breaking Changes
 
@@ -22,10 +50,9 @@ I will add links where possible, including retroactively if possible.
 ### Added
 
 - Ability to remove event handlers [#40](https://github.com/jewlexx/discord-presence/issues/40)
-
-### Added
-
 - Support buttons [#38](https://github.com/jewlexx/discord-presence/issues/38)
+- Client can now be cloned
+- Better types for the Error event
 
 ### Fixed
 
