@@ -60,6 +60,11 @@ impl SendActivityJoinInviteArgs {
 }
 
 /// [`ActivityType`] enum
+///
+/// Lists all activity types currently supported by Discord.
+///
+/// This may change in future if Discord adds support for more types,
+/// or removes support for some.
 #[cfg(feature = "activity_type")]
 #[cfg_attr(docsrs, doc(cfg(feature = "activity_type")))]
 #[repr(u8)]
