@@ -9,6 +9,10 @@ I will add links where possible, including retroactively if possible.
 
 ## [Unreleased](https://github.com/jewlexx/discord-presence/tree/trunk)
 
+### Changed
+
+- Update MSRV to 1.69.0
+
 ### Added
 
 - Support for different activity types by [@natawie](https://github.com/natawie) [#118](https://github.com/jewlexx/discord-presence/pull/118)
