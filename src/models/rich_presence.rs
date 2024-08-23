@@ -59,7 +59,7 @@ impl SendActivityJoinInviteArgs {
     }
 }
 
-/// ActivityType enum
+/// [`ActivityType`] enum
 #[cfg(feature = "activity_type")]
 #[cfg_attr(docsrs, doc(cfg(feature = "activity_type")))]
 #[repr(u8)]
@@ -217,11 +217,9 @@ mod activity_type_tests {
 
     #[test]
     fn can_serialize_activity_type() {
-        let activity = Activity::new()
-            ._type(ActivityType::Watching);
+        let activity = Activity::new()._type(ActivityType::Watching);
         let json = serde_json::to_string(&activity).expect("Failed to serialize into String");
 
         assert_eq![json, r#"{"type":3}"#];
     }
 }
-

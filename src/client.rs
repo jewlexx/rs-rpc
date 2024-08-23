@@ -94,9 +94,6 @@ pub struct Client {
     thread: Option<Arc<ClientThread>>,
 }
 
-#[cfg(feature = "bevy")]
-impl bevy::ecs::system::Resource for Client {}
-
 impl Client {
     /// Creates a new `Client` with default error sleep duration of 5 seconds, and no limit on connection attempts
     #[must_use]
