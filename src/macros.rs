@@ -9,7 +9,8 @@ macro_rules! builder_func_doc {
 }
 
 macro_rules! builder_func {
-    [ $name:ident, $type:tt func ] => {
+    [ $name:ident, $type:tt func $(=> if feature = $feature:tt)? ] => {
+        $(#[cfg(feature = $feature)])?
         #[doc = builder_func_doc!($type)]
         #[must_use]
         pub fn $name<F>(mut self, func: F) -> Self
@@ -19,7 +20,8 @@ macro_rules! builder_func {
         }
     };
 
-    [ $name:ident, String ] => {
+    [ $name:ident, String $(=> if feature = $feature:tt)? ] => {
+        $(#[cfg(feature = $feature)])?
         #[doc = builder_func_doc!(Stringish)]
         #[must_use]
         pub fn $name<S>(mut self, value: S) -> Self
@@ -29,7 +31,8 @@ macro_rules! builder_func {
         }
     };
 
-    [ $name:ident, $type:ty ] => {
+    [ $name:ident, $type:ty $(=> if feature = $feature:tt)? ] => {
+        $(#[cfg(feature = $feature)])?
         #[doc = builder_func_doc!($type)]
         #[must_use]
         pub fn $name(mut self, value: $type) -> Self {
@@ -76,10 +79,11 @@ macro_rules! into_error {
 }
 
 macro_rules! builder {
-    [ @st ( $name:ident $field:tt: $type:tt alias = $alias:tt, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
+    [ @st ( $name:ident $field:tt: $type:tt alias = $alias:tt $(=> if feature = $feature:tt)?, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
         builder![ @st
             ( $name $($rest)* ) -> (
                 $($out)*
+                $(#[cfg(feature = $feature)])?
                 #[doc = concat!("Optional " , stringify!($field), " field")]
                 #[serde(skip_serializing_if = "Option::is_none", rename = $alias)]
                 pub $field: Option<$type>,
@@ -87,7 +91,7 @@ macro_rules! builder {
         ];
     };
 
-    [ @st ( $name:ident $field:tt: $type:tt func, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
+    [ @st ( $name:ident $field:tt: $type:tt func $(=> if feature = $feature:tt)?, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
         builder![ @st ( $name $field: $type, $($rest)* ) -> ( $($out)* ) ];
     };
 
@@ -105,7 +109,7 @@ macro_rules! builder {
     };
 
 
-    [ @st ( $name:ident $field:ident: $type:ty, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
+    [ @st ( $name:ident $field:ident: $type:ty $(=> if feature = $feature:tt)?, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
         builder![ @st
             ( $name $($rest)* ) -> (
                 $($out)*
@@ -122,20 +126,20 @@ macro_rules! builder {
         pub struct $name { $($out)* }
     };
 
-    [ @im ( $name:ident $field:ident: $type:tt func, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
-        builder![ @im ( $name $($rest)* ) -> ( builder_func![$field, $type func]; $($out)* ) ];
+    [ @im ( $name:ident $field:ident: $type:tt func $(=> if feature = $feature:tt)?, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
+        builder![ @im ( $name $($rest)* ) -> ( builder_func![$field, $type func $(=> if feature = $feature)?]; $($out)* ) ];
     };
 
-    [ @im ( $name:ident $field:ident: $type:tt as array, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
+    [ @im ( $name:ident $field:ident: $type:tt as array $(=> if feature = $feature:tt)?, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
         builder![ @im ( $name $($rest)* ) -> ( builder_array![$field, $type array]; $($out)* ) ];
     };
 
-    [ @im ( $name:ident $field:ident: $type:tt alias = $modifier:tt, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
-        builder![ @im ( $name $field: $type, $($rest)* ) -> ( $($out)* ) ];
+    [ @im ( $name:ident $field:ident: $type:tt alias = $modifier:tt $(=> if feature = $feature:tt)?, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
+        builder![ @im ( $name $field: $type $(=> if feature = $feature)?, $($rest)* ) -> ( $($out)* ) ];
     };
 
-    [ @im ( $name:ident $field:ident: $type:tt, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
-        builder![ @im ( $name $($rest)* ) -> ( builder_func![$field, $type]; $($out)* ) ];
+    [ @im ( $name:ident $field:ident: $type:tt $(=> if feature = $feature:tt)?, $($rest:tt)* ) -> ( $($out:tt)* ) ] => {
+        builder![ @im ( $name $($rest)* ) -> ( builder_func![$field, $type $(=> if feature = $feature)?]; $($out)* ) ];
     };
 
     [ @im ( $name:ident ) -> ( $($out:tt)* ) ] => {

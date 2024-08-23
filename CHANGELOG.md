@@ -9,6 +9,10 @@ I will add links where possible, including retroactively if possible.
 
 ## [Unreleased](https://github.com/jewlexx/discord-presence/tree/trunk)
 
+### Added
+
+- Support for different activity types by [@natawie](https://github.com/natawie) [#118](https://github.com/jewlexx/discord-presence/pull/118)
+
 ## [1.2.0](https://github.com/jewlexx/discord-presence/releases/tag/v1.2.0)
 
 ### Changed
