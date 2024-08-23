@@ -1,3 +1,4 @@
 {
-    "discord.enabled": false
+    "discord.enabled": false,
+    "rust-analyzer.cargo.features": "all"
 }
