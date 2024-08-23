@@ -63,6 +63,7 @@ impl SendActivityJoinInviteArgs {
 #[cfg(feature = "activity_type")]
 #[cfg_attr(docsrs, doc(cfg(feature = "activity_type")))]
 #[repr(u8)]
+#[non_exhaustive]
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize_repr, Serialize_repr, Hash)]
 pub enum ActivityType {
     /// Playing a game
