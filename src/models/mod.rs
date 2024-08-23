@@ -36,15 +36,15 @@ pub enum Command {
 #[derive(Debug, PartialEq, Eq, Deserialize, Serialize, Copy, Clone, Hash, ListVariants)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum Event {
-    /// Ready event, fired when the client is ready, but not if an error occurs
+    /// [`Event::Ready`] event, fired when the client is ready, but not if an error occurs
     Ready,
-    /// Error event, overrides the `Ready` event
+    /// [`Event::Error`] event, overrides the `Ready` event
     Error,
-    /// ActivityJoin event, fired when the client's game is joined by a player
+    /// [`Event::ActivityJoin`] event, fired when the client's game is joined by a player
     ActivityJoin,
-    /// ActivitySpectate event, fired when the client receives a spectate request
+    /// [`Event::ActivitySpectate`] event, fired when the client receives a spectate request
     ActivitySpectate,
-    /// ActivityJoinRequest event, fired when the client receives a join request
+    /// [`Event::ActivityJoinRequest`] event, fired when the client receives a join request
     ActivityJoinRequest,
 }
 
@@ -79,17 +79,17 @@ impl Event {
 #[derive(Debug, PartialEq, Eq, Deserialize, Serialize, Clone)]
 /// Internal data for the [`Event`] enum
 pub enum EventData {
-    /// Ready event data
+    /// [`EventData::Ready`] event data
     Ready(ReadyEvent),
-    /// Error event data
+    /// [`EventData::Error`] event data
     Error(ErrorEvent),
-    /// ActivityJoin event data
+    /// [`EventData::ActivityJoin`] event data
     ActivityJoin(ActivityJoinEvent),
-    /// ActivitySpectate event data
+    /// [`EventData::ActivitySpectate`] event data
     ActivitySpectate(ActivitySpectateEvent),
-    /// ActivityJoinRequest event data
+    /// [`EventData::ActivityJoinRequest`] event data
     ActivityJoinRequest(ActivityJoinRequestEvent),
-    /// Unknown event data
+    /// [`EventData::Unknown`] event data
     Unknown(JsonValue),
 }
 
