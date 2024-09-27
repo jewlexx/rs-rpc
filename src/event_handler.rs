@@ -5,18 +5,20 @@ use parking_lot::RwLock;
 
 use crate::models::{Event, EventData};
 
-type Handler = dyn Fn(Context) + 'static + Send + Sync;
+/// Event handler callback
+pub type Handler = dyn Fn(Context) + 'static + Send + Sync;
 
 type HandlerList = Vec<Arc<Handler>>;
 
 #[derive(Debug, Clone)]
+/// Event context
 pub struct Context {
-    // TODO: implement event data structures
+    /// Event data
     pub event: EventData,
 }
 
 impl Context {
-    pub fn new(event: EventData) -> Self {
+    pub(crate) fn new(event: EventData) -> Self {
         Self { event }
     }
 }
@@ -24,6 +26,7 @@ impl Context {
 type Handlers = RwLock<HashMap<Event, HandlerList>>;
 
 #[must_use = "event listeners will be immediately dropped if the handle is not kept. Use `.persist` to stop them from being removed."]
+/// Handle to an event listener
 pub struct EventCallbackHandle {
     event: Event,
     registry: Weak<HandlerRegistry>,
@@ -54,7 +57,7 @@ impl Drop for EventCallbackHandle {
     }
 }
 
-pub struct HandlerRegistry {
+pub(crate) struct HandlerRegistry {
     handlers: Handlers,
 }
 

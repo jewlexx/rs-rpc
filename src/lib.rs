@@ -26,6 +26,7 @@ pub mod client;
 mod connection;
 /// Errors that can occur when interacting with the Discord Presence API
 pub mod error;
+/// Event handlers
 pub mod event_handler;
 /// Models for discord activity
 pub mod models;
