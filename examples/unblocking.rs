@@ -2,10 +2,10 @@ use std::{mem::forget, thread::sleep, time::Duration};
 
 use discord_presence::Client;
 
+mod helpers;
+
 fn main() {
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::TRACE)
-        .init();
+    helpers::logging::init_logging();
 
     let mut client = Client::new(1003450375732482138);
 
