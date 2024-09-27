@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 I will add links where possible, including retroactively if possible.
 
+## [Unreleased](https://github.com/jewlexx/discord-presence/tree/main)
+
+### Added
+
+- Expose `event_handler` module
+- Exposed types are `Context`, `EventCallbackHandle` and `Handler`
+
 ## [1.3.0](https://github.com/jewlexx/discord-presence/releases/tag/v1.2.0)
 
 ### Changed
