@@ -153,6 +153,8 @@ fn send_and_receive_loop(
             }
             None => match manager.connect() {
                 Err(err) => {
+                    crate::READY.store(false, Ordering::Relaxed);
+
                     manager.event_handler_registry.handle(
                         Event::Error,
                         crate::models::EventData::Error(ErrorEvent {
