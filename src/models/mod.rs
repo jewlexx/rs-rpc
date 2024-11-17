@@ -38,6 +38,10 @@ pub enum Command {
 pub enum Event {
     /// [`Event::Ready`] event, fired when the client is ready, but not if an error occurs
     Ready,
+    /// [`Event::Connected`] event, fired when the client successfully connects (including re-connections)
+    Connected,
+    /// [`Event::Disconnected]` event, fired when the client was connected but loses connection
+    Disconnected,
     /// [`Event::Error`] event, overrides the `Ready` event
     Error,
     /// [`Event::ActivityJoin`] event, fired when the client's game is joined by a player
@@ -72,6 +76,8 @@ impl Event {
             Event::ActivityJoinRequest => serde_json::from_value(data.clone())
                 .map(EventData::ActivityJoinRequest)
                 .unwrap_or(EventData::Unknown(data)),
+
+            Event::Connected | Event::Disconnected => EventData::None,
         }
     }
 }
@@ -91,6 +97,8 @@ pub enum EventData {
     ActivityJoinRequest(ActivityJoinRequestEvent),
     /// [`EventData::Unknown`] event data
     Unknown(JsonValue),
+    /// [`EventData::None`] event data, used for events which send no data
+    None,
 }
 
 pub use commands::*;
