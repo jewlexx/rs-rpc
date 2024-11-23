@@ -1,4 +1,5 @@
 use super::{Connection, Socket};
+use crate::models::EventData;
 use crate::{
     error::{DiscordError, Result},
     event_handler::HandlerRegistry,
@@ -98,6 +99,9 @@ impl Manager {
             );
         }
 
+        self.event_handler_registry
+            .handle(Event::Connected, EventData::None);
+
         trace!("Handshake completed");
 
         self.connection = Arc::new(Some(Mutex::new(new_connection)));
@@ -143,6 +147,9 @@ fn send_and_receive_loop(
                     Err(DiscordError::IoError(ref err)) if err.kind() == ErrorKind::WouldBlock => {}
                     Err(DiscordError::IoError(_) | DiscordError::ConnectionClosed) => {
                         manager.disconnect();
+                        manager
+                            .event_handler_registry
+                            .handle(Event::Disconnected, EventData::None);
                     }
                     Err(DiscordError::TimeoutError(_)) => continue,
                     Err(why) => trace!("discord error: {}", why),
