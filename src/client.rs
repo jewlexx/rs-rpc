@@ -207,13 +207,7 @@ impl Client {
         );
         self.connection_manager.send(message?)?;
         let Message { payload, .. } = self.connection_manager.recv()?;
-
-        // TODO: Remove this once the serde_json bug is fixed
-        // There appears to be a bug currently where this will not deserialize properly
-        // It throws the "trailing characters" error
-        // However, parsing to a serde_json::Value, and then deserializing from that works
-        let response_value: serde_json::Value = serde_json::from_str(&payload)?;
-        let response: Payload<E> = serde_json::from_value(response_value)?;
+        let response: Payload<E> = serde_json::from_str(&payload)?;
 
         match response.evt {
             Some(Event::Error) => Err(DiscordError::SubscriptionFailed),
