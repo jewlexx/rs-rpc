@@ -9,6 +9,8 @@ I will add links where possible, including retroactively if possible.
 
 ## [Unreleased](https://github.com/jewlexx/discord-presence/tree/main)
 
+## [1.4.0](https://github.com/jewlexx/discord-presence/releases/tag/v1.4.0)
+
 ### Added
 
 - `Connected` and `Disconnected` events for when the client successfully connects and disconnects
