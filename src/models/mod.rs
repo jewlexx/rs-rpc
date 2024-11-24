@@ -85,19 +85,19 @@ impl Event {
 #[derive(Debug, PartialEq, Eq, Deserialize, Serialize, Clone)]
 /// Internal data for the [`Event`] enum
 pub enum EventData {
-    /// [`EventData::Ready`] event data
+    /// [`Event::Ready`] event data
     Ready(ReadyEvent),
-    /// [`EventData::Error`] event data
+    /// [`Event::Error`] event data
     Error(ErrorEvent),
-    /// [`EventData::ActivityJoin`] event data
+    /// [`Event::ActivityJoin`] event data
     ActivityJoin(ActivityJoinEvent),
-    /// [`EventData::ActivitySpectate`] event data
+    /// [`Event::ActivitySpectate`] event data
     ActivitySpectate(ActivitySpectateEvent),
-    /// [`EventData::ActivityJoinRequest`] event data
+    /// [`Event::ActivityJoinRequest`] event data
     ActivityJoinRequest(ActivityJoinRequestEvent),
-    /// [`EventData::Unknown`] event data
+    /// Unknown event data
     Unknown(JsonValue),
-    /// [`EventData::None`] event data, used for events which send no data
+    /// Event had no data
     None,
 }
 

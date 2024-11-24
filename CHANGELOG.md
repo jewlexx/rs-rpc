@@ -11,6 +11,16 @@ I will add links where possible, including retroactively if possible.
 
 ### Added
 
+- `Connected` and `Disconnected` events for when the client successfully connects and disconnects
+
+### Changed
+
+- `EventData` documentation references to reference the `Event` enum instead of `EventData`
+
+## [1.3.1](https://github.com/jewlexx/discord-presence/releases/tag/v1.3.1)
+
+### Added
+
 - Expose `event_handler` module
 - Exposed types are `Context`, `EventCallbackHandle` and `Handler`
 
