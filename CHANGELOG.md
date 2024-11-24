@@ -13,7 +13,7 @@ I will add links where possible, including retroactively if possible.
 
 ### Added
 
-- `Connected` and `Disconnected` events for when the client successfully connects and disconnects
+- `Connected` and `Disconnected` events for when the client successfully connects and disconnects. Thanks to @JakeStanger.
 
 ### Changed
 
