@@ -8,7 +8,7 @@ name = "discord-presence"
 readme = "README.md"
 repository = "https://github.com/jewlexx/discord-presence.git"
 rust-version = "1.69.0"
-version = "1.3.1"
+version = "1.4.0"
 
 [features]
 activity_type = ["dep:serde_repr"]
