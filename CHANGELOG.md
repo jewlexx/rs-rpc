@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.4.1](https://github.com/jewlexx/discord-presence/releases/tag/v1.4.1)
 
+### Fixed
+
+- Compilation errors on Rust v1.69.x
+
 ### Changed
 
 - Downgrade quork to 0.7.1 to fix compilation error on Rust v1.69.x
