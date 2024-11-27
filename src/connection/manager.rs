@@ -32,7 +32,7 @@ pub struct Manager {
 }
 
 impl Manager {
-    pub fn new(
+    pub(crate) fn new(
         client_id: u64,
         event_handler_registry: Arc<HandlerRegistry>,
         error_sleep: Duration,

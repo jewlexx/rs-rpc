@@ -9,6 +9,14 @@ I will add links where possible, including retroactively if possible.
 
 ## [Unreleased](https://github.com/jewlexx/discord-presence/tree/main)
 
+## [1.4.1](https://github.com/jewlexx/discord-presence/releases/tag/v1.4.1)
+
+### Changed
+
+- Downgrade quork to 0.7.1 to fix compilation error on Rust v1.69.x
+  - This downgrades the windows crate to a version that is compatible with the MSRV
+- `Manager::new` function is now `pub(crate)`. This makes no difference to the public API, as the `Manager` struct was never public.
+
 ## [1.4.0](https://github.com/jewlexx/discord-presence/releases/tag/v1.4.0)
 
 ### Added
