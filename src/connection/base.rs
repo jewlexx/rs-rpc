@@ -94,7 +94,7 @@ pub trait Connection: Sized {
     /// Receive a message from the server.
     fn recv(&mut self) -> Result<Message> {
         let mut buf = BytesMut::new();
-        buf.resize(1024, 0);
+        buf.resize(2048, 0);
         let n = self.socket().read(&mut buf)?;
         trace!("Received {} bytes", n);
 
