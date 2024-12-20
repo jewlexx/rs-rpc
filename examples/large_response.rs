@@ -1,9 +1,10 @@
 use discord_presence::Event;
 
+mod helpers;
+
 fn main() -> anyhow::Result<()> {
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::TRACE)
-        .init();
+    helpers::logging::init_logging();
+
     let url_base = "https://example.com/".to_string();
     let mut client = discord_presence::Client::new(1286481105410588672);
     client.start();
