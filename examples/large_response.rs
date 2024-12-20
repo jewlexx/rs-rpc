@@ -10,21 +10,23 @@ fn main() -> anyhow::Result<()> {
     client.block_until_event(Event::Ready)?;
     client.set_activity(|activity| {
         activity
-            .state("A".to_string().repeat(128))
-            .details("A".to_string().repeat(128))
+            .state("A".repeat(128))
+            .details("A".repeat(128))
             .assets(|assets| {
                 assets
-                    .large_text("A".to_string().repeat(128))
-                    .large_image("A".to_string().repeat(256))
-                    .small_image("A".to_string().repeat(256))
-                    .small_text("A".to_string().repeat(128))
+                    .large_text("A".repeat(128))
+                    .large_image("A".repeat(256))
+                    .small_image("A".repeat(256))
+                    .small_text("A".repeat(128))
             })
             .append_buttons(|buttons| {
                 buttons
-                    .url(url_base.clone() + &"A".to_string().repeat(256 - url_base.len()))
-                    .label("A".to_string().repeat(32))
+                    .url(url_base.clone() + &"A".repeat(256 - url_base.len()))
+                    .label("A".repeat(32))
             })
     })?;
+
+    client.block_on()?;
 
     Ok(())
 }
