@@ -1,9 +1,9 @@
 use discord_presence::Client;
 
+mod helpers;
+
 fn main() {
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::TRACE)
-        .init();
+    helpers::logging::init_logging();
 
     let mut drpc = Client::new(1003450375732482138);
 
