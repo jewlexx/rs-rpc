@@ -137,9 +137,8 @@ fn send_and_receive_loop(
 
         match *connection {
             Some(ref conn) => {
-                let mut connection = conn.lock();
                 match send_and_receive(
-                    &mut connection,
+                    &mut conn.lock(),
                     &manager.event_handler_registry,
                     &mut inbound,
                     &outbound,
@@ -155,6 +154,8 @@ fn send_and_receive_loop(
                     Err(why) => trace!("discord error: {}", why),
                     _ => {}
                 }
+
+                debug!("Finished send and receive loop iteration");
 
                 thread::sleep(time::Duration::from_millis(500));
             }

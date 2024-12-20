@@ -5,7 +5,7 @@ use num_traits::FromPrimitive;
 use serde::Serialize;
 use std::io::{Read, Write};
 
-// const MAX_RPC_FRAME_SIZE: usize = 64 * 1024;
+pub(crate) const MAX_RPC_FRAME_SIZE: usize = 64 * 1024;
 
 /// Codes for payload types
 #[derive(Debug, Copy, Clone, PartialEq, Eq, FromPrimitive)]

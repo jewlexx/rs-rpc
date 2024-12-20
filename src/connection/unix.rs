@@ -13,8 +13,8 @@ impl Connection for Socket {
         let connection_name = Self::socket_path(0);
         let socket = UnixStream::connect(connection_name)?;
         socket.set_nonblocking(true)?;
-        socket.set_write_timeout(Some(time::Duration::from_secs(30)))?;
-        socket.set_read_timeout(Some(time::Duration::from_secs(30)))?;
+        socket.set_read_timeout(Some(Self::READ_WRITE_TIMEOUT));
+        socket.set_write_timeout(Some(Self::READ_WRITE_TIMEOUT));
         Ok(Self { socket })
     }
 

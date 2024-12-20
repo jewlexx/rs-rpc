@@ -1,20 +1,22 @@
+use std::path::PathBuf;
+
+use named_pipe::PipeClient;
+
 use super::base::Connection;
 use crate::Result;
-use std::{path::PathBuf, time};
 
 pub struct Socket {
-    socket: std::fs::File,
+    socket: PipeClient,
 }
 
 impl Connection for Socket {
-    type Socket = std::fs::File;
+    type Socket = PipeClient;
 
     fn connect() -> Result<Self> {
         // TODO: Add timed out reads and writes to 16s
-        let socket = std::fs::OpenOptions::new()
-            .read(true)
-            .write(true)
-            .open(Self::socket_path(0))?;
+        let mut socket = PipeClient::connect(Self::socket_path(0))?;
+        socket.set_read_timeout(Some(Self::READ_WRITE_TIMEOUT));
+        socket.set_write_timeout(Some(Self::READ_WRITE_TIMEOUT));
         Ok(Self { socket })
     }
 

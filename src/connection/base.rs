@@ -1,6 +1,6 @@
 use crate::{
     error::{DiscordError, Result},
-    models::message::{FrameHeader, Message, OpCode},
+    models::message::{FrameHeader, Message, OpCode, MAX_RPC_FRAME_SIZE},
     utils,
 };
 use bytes::BytesMut;
@@ -9,7 +9,8 @@ use std::{
     io::{Read, Write},
     marker::Sized,
     path::PathBuf,
-    thread, time,
+    thread,
+    time::{self, Duration},
 };
 
 /// Wait for a non-blocking connection until it's complete.
@@ -28,6 +29,8 @@ macro_rules! try_until_done {
 
 pub trait Connection: Sized {
     type Socket: Write + Read;
+
+    const READ_WRITE_TIMEOUT: Duration = Duration::from_secs(16);
 
     /// The internally stored socket connection.
     fn socket(&mut self) -> &mut Self::Socket;
@@ -84,6 +87,7 @@ pub trait Connection: Sized {
         match message.encode() {
             Err(why) => error!("{:?}", why),
             Ok(bytes) => {
+                assert!(bytes.len() <= MAX_RPC_FRAME_SIZE);
                 self.socket().write_all(&bytes)?;
             }
         };
@@ -97,6 +101,7 @@ pub trait Connection: Sized {
         let mut buf = BytesMut::new();
         buf.resize(std::mem::size_of::<FrameHeader>(), 0);
 
+        trace!("Reading header");
         let n = self.socket().read(&mut buf)?;
         trace!("Received {} bytes for header", n);
 
@@ -111,6 +116,7 @@ pub trait Connection: Sized {
         let mut message_buf = BytesMut::new();
         message_buf.resize(header.message_length() as usize, 0);
 
+        trace!("Reading payload");
         let n = self.socket().read(&mut message_buf)?;
         trace!("Received {} bytes for payload", n);
 
