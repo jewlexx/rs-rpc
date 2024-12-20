@@ -391,6 +391,10 @@ impl Client {
     event_handler_function!(on_activity_join_request, Event::ActivityJoinRequest);
 
     event_handler_function!(on_activity_spectate, Event::ActivitySpectate);
+
+    event_handler_function!(on_connected, Event::Connected);
+
+    event_handler_function!(on_disconnected, Event::Disconnected);
 }
 
 #[cfg(test)]

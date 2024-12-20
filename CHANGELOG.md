@@ -5,9 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-I will add links where possible, including retroactively if possible.
-
 ## [Unreleased](https://github.com/jewlexx/discord-presence/tree/main)
+
+## [1.4.1](https://github.com/jewlexx/discord-presence/releases/tag/v1.4.1)
+
+### Fixed
+
+- Compilation errors on Rust v1.69.x
+
+### Changed
+
+- Downgrade quork to 0.7.1 to fix compilation error on Rust v1.69.x
+  - This downgrades the windows crate to a version that is compatible with the MSRV
+- `Manager::new` function is now `pub(crate)`. This makes no difference to the public API, as the `Manager` struct was never public.
+
+## [1.4.0](https://github.com/jewlexx/discord-presence/releases/tag/v1.4.0)
+
+### Added
+
+- `Connected` and `Disconnected` events for when the client successfully connects and disconnects. Thanks to @JakeStanger.
+
+### Changed
+
+- `EventData` documentation references to reference the `Event` enum instead of `EventData`
+
+## [1.3.1](https://github.com/jewlexx/discord-presence/releases/tag/v1.3.1)
 
 ### Added
 

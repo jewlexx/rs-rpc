@@ -38,6 +38,10 @@ pub enum Command {
 pub enum Event {
     /// [`Event::Ready`] event, fired when the client is ready, but not if an error occurs
     Ready,
+    /// [`Event::Connected`] event, fired when the client successfully connects (including re-connections)
+    Connected,
+    /// [`Event::Disconnected]` event, fired when the client was connected but loses connection
+    Disconnected,
     /// [`Event::Error`] event, overrides the `Ready` event
     Error,
     /// [`Event::ActivityJoin`] event, fired when the client's game is joined by a player
@@ -72,6 +76,8 @@ impl Event {
             Event::ActivityJoinRequest => serde_json::from_value(data.clone())
                 .map(EventData::ActivityJoinRequest)
                 .unwrap_or(EventData::Unknown(data)),
+
+            Event::Connected | Event::Disconnected => EventData::None,
         }
     }
 }
@@ -79,18 +85,20 @@ impl Event {
 #[derive(Debug, PartialEq, Eq, Deserialize, Serialize, Clone)]
 /// Internal data for the [`Event`] enum
 pub enum EventData {
-    /// [`EventData::Ready`] event data
+    /// [`Event::Ready`] event data
     Ready(ReadyEvent),
-    /// [`EventData::Error`] event data
+    /// [`Event::Error`] event data
     Error(ErrorEvent),
-    /// [`EventData::ActivityJoin`] event data
+    /// [`Event::ActivityJoin`] event data
     ActivityJoin(ActivityJoinEvent),
-    /// [`EventData::ActivitySpectate`] event data
+    /// [`Event::ActivitySpectate`] event data
     ActivitySpectate(ActivitySpectateEvent),
-    /// [`EventData::ActivityJoinRequest`] event data
+    /// [`Event::ActivityJoinRequest`] event data
     ActivityJoinRequest(ActivityJoinRequestEvent),
-    /// [`EventData::Unknown`] event data
+    /// Unknown event data
     Unknown(JsonValue),
+    /// Event had no data
+    None,
 }
 
 pub use commands::*;

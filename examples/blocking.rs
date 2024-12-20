@@ -12,6 +12,16 @@ fn main() -> anyhow::Result<()> {
     })
     .persist();
 
+    drpc.on_connected(|_ctx| {
+        println!("Connected!");
+    })
+    .persist();
+
+    drpc.on_disconnected(|_ctx| {
+        println!("Disconnected...");
+    })
+    .persist();
+
     drpc.on_activity_join_request(|ctx| {
         println!("Join request: {:?}", ctx.event);
     })
