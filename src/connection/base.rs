@@ -1,6 +1,6 @@
 use crate::{
     error::{DiscordError, Result},
-    models::message::{Message, OpCode},
+    models::message::{FrameHeader, Message, OpCode},
     utils,
 };
 use bytes::BytesMut;
@@ -93,18 +93,38 @@ pub trait Connection: Sized {
 
     /// Receive a message from the server.
     fn recv(&mut self) -> Result<Message> {
+        // Read header
         let mut buf = BytesMut::new();
-        buf.resize(1024, 0);
+        buf.resize(std::mem::size_of::<FrameHeader>(), 0);
+
         let n = self.socket().read(&mut buf)?;
-        trace!("Received {} bytes", n);
+        trace!("Received {} bytes for header", n);
 
         if n == 0 {
             return Err(DiscordError::ConnectionClosed);
         }
 
-        let message = Message::decode(&buf[..n])?;
-        trace!("<- {:?}", message);
+        let Some(header) = (unsafe { FrameHeader::from_bytes(buf.as_ref()) }) else {
+            return Err(DiscordError::HeaderLength);
+        };
 
-        Ok(message)
+        let mut message_buf = BytesMut::new();
+        message_buf.resize(header.message_length() as usize, 0);
+
+        let n = self.socket().read(&mut message_buf)?;
+        trace!("Received {} bytes for payload", n);
+
+        if n == 0 {
+            return Err(DiscordError::ConnectionClosed);
+        }
+
+        let mut payload = String::with_capacity(header.message_length() as usize);
+        message_buf.as_ref().read_to_string(&mut payload)?;
+        trace!("<- {:?} = {:?}", header.opcode(), payload);
+
+        Ok(Message {
+            opcode: header.opcode(),
+            payload,
+        })
     }
 }

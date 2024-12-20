@@ -45,6 +45,9 @@ pub enum DiscordError {
     #[error("Error converting values")]
     /// Conversion Error
     Conversion,
+    #[error("Error decoding response. Incorrect header length")]
+    /// Header Length Error
+    HeaderLength,
     #[error("Error subscribing to an event")]
     /// Subscription Joining Error
     SubscriptionFailed,

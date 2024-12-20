@@ -5,7 +5,7 @@
     clippy::all,
     clippy::pedantic
 )]
-#![forbid(unsafe_code)]
+// #![forbid(unsafe_code)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 //! A Rust library that allows the developer to interact with the Discord Presence API with ease
