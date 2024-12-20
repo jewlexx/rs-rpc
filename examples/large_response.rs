@@ -1,0 +1,30 @@
+use discord_presence::Event;
+
+fn main() -> anyhow::Result<()> {
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::TRACE)
+        .init();
+    let url_base = "https://example.com/".to_string();
+    let mut client = discord_presence::Client::new(1286481105410588672);
+    client.start();
+    client.block_until_event(Event::Ready)?;
+    client.set_activity(|activity| {
+        activity
+            .state("A".to_string().repeat(128))
+            .details("A".to_string().repeat(128))
+            .assets(|assets| {
+                assets
+                    .large_text("A".to_string().repeat(128))
+                    .large_image("A".to_string().repeat(256))
+                    .small_image("A".to_string().repeat(256))
+                    .small_text("A".to_string().repeat(128))
+            })
+            .append_buttons(|buttons| {
+                buttons
+                    .url(url_base.clone() + &"A".to_string().repeat(256 - url_base.len()))
+                    .label("A".to_string().repeat(32))
+            })
+    })?;
+
+    Ok(())
+}

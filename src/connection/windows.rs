@@ -1,21 +1,20 @@
 use super::base::Connection;
 use crate::Result;
-use named_pipe::PipeClient;
 use std::{path::PathBuf, time};
 
 pub struct Socket {
-    socket: PipeClient,
+    socket: std::fs::File,
 }
 
 impl Connection for Socket {
-    type Socket = PipeClient;
+    type Socket = std::fs::File;
 
     fn connect() -> Result<Self> {
-        let connection_name = Self::socket_path(0);
-        let mut socket = PipeClient::connect(connection_name)?;
-        // Discord rate limit timeout is 15 seconds, so 16 should account for that
-        socket.set_write_timeout(Some(time::Duration::from_secs(16)));
-        socket.set_read_timeout(Some(time::Duration::from_secs(16)));
+        // TODO: Add timed out reads and writes to 16s
+        let socket = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .open(Self::socket_path(0))?;
         Ok(Self { socket })
     }
 
