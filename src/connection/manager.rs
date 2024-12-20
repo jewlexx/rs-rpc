@@ -155,7 +155,7 @@ fn send_and_receive_loop(
                     _ => {}
                 }
 
-                debug!("Finished send and receive loop iteration");
+                trace!("Finished send and receive loop iteration");
 
                 thread::sleep(time::Duration::from_millis(500));
             }

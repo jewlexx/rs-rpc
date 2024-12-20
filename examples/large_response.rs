@@ -10,19 +10,22 @@ fn main() -> anyhow::Result<()> {
     client.start();
     client.block_until_event(Event::Ready)?;
     client.set_activity(|activity| {
+        const ACTIVITY_TEXT_LIMIT: usize = 128;
+        const ASSET_URL_LIMIT: usize = 256;
+
         activity
             .state("A".repeat(128))
             .details("A".repeat(128))
             .assets(|assets| {
                 assets
-                    .large_text("A".repeat(128))
-                    .large_image("A".repeat(256))
-                    .small_image("A".repeat(256))
-                    .small_text("A".repeat(128))
+                    .large_text("A".repeat(ACTIVITY_TEXT_LIMIT))
+                    .large_image("A".repeat(ASSET_URL_LIMIT))
+                    .small_text("A".repeat(ACTIVITY_TEXT_LIMIT))
+                    .small_image("A".repeat(ASSET_URL_LIMIT))
             })
             .append_buttons(|buttons| {
                 buttons
-                    .url(url_base.clone() + &"A".repeat(256 - url_base.len()))
+                    .url(url_base.clone() + &"A".repeat(ASSET_URL_LIMIT - url_base.len()))
                     .label("A".repeat(32))
             })
     })?;

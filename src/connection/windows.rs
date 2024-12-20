@@ -13,7 +13,6 @@ impl Connection for Socket {
     type Socket = PipeClient;
 
     fn connect() -> Result<Self> {
-        // TODO: Add timed out reads and writes to 16s
         let mut socket = PipeClient::connect(Self::socket_path(0))?;
         socket.set_read_timeout(Some(Self::READ_WRITE_TIMEOUT));
         socket.set_write_timeout(Some(Self::READ_WRITE_TIMEOUT));

@@ -30,6 +30,8 @@ macro_rules! try_until_done {
 pub trait Connection: Sized {
     type Socket: Write + Read;
 
+    /// Time for socket read/write operations
+    /// 1 second higher than Discord's rate limit timeout of 15 seconds
     const READ_WRITE_TIMEOUT: Duration = Duration::from_secs(16);
 
     /// The internally stored socket connection.
