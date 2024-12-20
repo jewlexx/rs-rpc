@@ -6,6 +6,8 @@ use serde::Serialize;
 use std::io::{Read, Write};
 
 pub(crate) const MAX_RPC_FRAME_SIZE: usize = 64 * 1024;
+pub(crate) const MAX_RPC_MESSAGE_SIZE: usize =
+    MAX_RPC_FRAME_SIZE - std::mem::size_of::<FrameHeader>();
 
 /// Codes for payload types
 #[derive(Debug, Copy, Clone, PartialEq, Eq, FromPrimitive)]
@@ -47,13 +49,19 @@ impl FrameHeader {
             return None;
         }
 
-        Some(unsafe { std::ptr::read_unaligned(bytes.as_ptr().cast()) })
+        let header: Self = unsafe { std::ptr::read_unaligned(bytes.as_ptr().cast()) };
+
+        if header.message_length() > MAX_RPC_MESSAGE_SIZE {
+            return None;
+        }
+
+        Some(header)
     }
 
     #[must_use]
     /// Get the expected message length
-    pub fn message_length(&self) -> u32 {
-        self.length
+    pub fn message_length(&self) -> usize {
+        self.length as usize
     }
 
     #[must_use]
