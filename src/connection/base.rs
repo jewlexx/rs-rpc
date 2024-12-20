@@ -115,7 +115,7 @@ pub trait Connection: Sized {
         trace!("Received {} bytes for payload", n);
 
         if n == 0 {
-            return Err(DiscordError::ConnectionClosed);
+            return Err(DiscordError::NoMessage);
         }
 
         let mut payload = String::with_capacity(header.message_length() as usize);
