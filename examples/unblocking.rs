@@ -11,7 +11,7 @@ fn main() {
 
     client.start();
 
-    tracing::error!("Due to the way unblocking activity setting works, this example does not seem to work currently (at least on Windows).");
+    log::error!("Due to the way unblocking activity setting works, this example does not seem to work currently (at least on Windows).");
     {
         let ready = client.on_ready({
             let client = client.clone();
@@ -40,7 +40,7 @@ fn main() {
         eprintln!("An error occured, {:?}", ctx.event);
     });
 
-    tracing::trace!("Made it to the final line");
+    log::trace!("Made it to the final line");
 
     // keep the main thread alive
     loop {
