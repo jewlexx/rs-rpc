@@ -1,6 +1,6 @@
 use crate::{
     error::{DiscordError, Result},
-    models::message::{Message, OpCode},
+    models::message::{FrameHeader, Message, OpCode, MAX_RPC_FRAME_SIZE},
     utils,
 };
 use bytes::BytesMut;
@@ -9,7 +9,8 @@ use std::{
     io::{Read, Write},
     marker::Sized,
     path::PathBuf,
-    thread, time,
+    thread,
+    time::{self, Duration},
 };
 
 /// Wait for a non-blocking connection until it's complete.
@@ -28,6 +29,10 @@ macro_rules! try_until_done {
 
 pub trait Connection: Sized {
     type Socket: Write + Read;
+
+    /// Time for socket read/write operations
+    /// 1 second higher than Discord's rate limit timeout of 15 seconds
+    const READ_WRITE_TIMEOUT: Duration = Duration::from_secs(16);
 
     /// The internally stored socket connection.
     fn socket(&mut self) -> &mut Self::Socket;
@@ -84,6 +89,7 @@ pub trait Connection: Sized {
         match message.encode() {
             Err(why) => error!("{:?}", why),
             Ok(bytes) => {
+                assert!(bytes.len() <= MAX_RPC_FRAME_SIZE);
                 self.socket().write_all(&bytes)?;
             }
         };
@@ -93,18 +99,43 @@ pub trait Connection: Sized {
 
     /// Receive a message from the server.
     fn recv(&mut self) -> Result<Message> {
+        // Read header
         let mut buf = BytesMut::new();
-        buf.resize(1024, 0);
+        buf.resize(std::mem::size_of::<FrameHeader>(), 0);
+
+        trace!("Reading header");
         let n = self.socket().read(&mut buf)?;
-        trace!("Received {} bytes", n);
+        trace!("Received {} bytes for header", n);
 
         if n == 0 {
             return Err(DiscordError::ConnectionClosed);
         }
 
-        let message = Message::decode(&buf[..n])?;
-        trace!("<- {:?}", message);
+        if n != std::mem::size_of::<FrameHeader>() {
+            return Err(DiscordError::HeaderLength);
+        }
 
-        Ok(message)
+        // SAFETY: the length of buf is already checked that the header is the correct size
+        let header = unsafe { FrameHeader::from_bytes(buf.as_ref()).unwrap_unchecked() };
+
+        let mut message_buf = BytesMut::new();
+        message_buf.resize(header.message_length(), 0);
+
+        trace!("Reading payload");
+        let n = self.socket().read(&mut message_buf)?;
+        trace!("Received {} bytes for payload", n);
+
+        if n == 0 {
+            return Err(DiscordError::NoMessage);
+        }
+
+        let mut payload = String::with_capacity(header.message_length());
+        message_buf.as_ref().read_to_string(&mut payload)?;
+        trace!("<- {:?} = {:?}", header.opcode(), payload);
+
+        Ok(Message {
+            opcode: header.opcode(),
+            payload,
+        })
     }
 }

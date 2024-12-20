@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/jewlexx/discord-presence/tree/main)
 
+### Added
+
+- Support for properly handling frame headers from Discord
+  - This should result in slight performance improvements
+    from not allocating more than necessary.
+  - This also allows for larger payloads to be sent
+
 ### Changed
 
 - Removed `tracing` crate in favour of `log`

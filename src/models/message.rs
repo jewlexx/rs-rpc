@@ -5,21 +5,96 @@ use num_traits::FromPrimitive;
 use serde::Serialize;
 use std::io::{Read, Write};
 
+pub(crate) const MAX_RPC_FRAME_SIZE: usize = 64 * 1024;
+pub(crate) const MAX_RPC_MESSAGE_SIZE: usize =
+    MAX_RPC_FRAME_SIZE - std::mem::size_of::<FrameHeader>();
+
 /// Codes for payload types
 #[derive(Debug, Copy, Clone, PartialEq, Eq, FromPrimitive)]
 #[repr(u32)]
 pub enum OpCode {
     /// Handshake payload
-    Handshake,
+    Handshake = 0,
     /// Frame payload
-    Frame,
+    Frame = 1,
     /// Close payload
-    Close,
+    Close = 2,
     /// Ping payload
-    Ping,
+    Ping = 3,
     /// Pong payload
-    Pong,
+    Pong = 4,
 }
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[repr(C)]
+/// Header for the payload
+///
+/// Determines the length of the payload, and the type of payload
+pub struct FrameHeader {
+    /// The opcode for the payload
+    opcode: OpCode,
+    /// The length of the payload
+    length: u32,
+}
+
+impl FrameHeader {
+    #[must_use]
+    /// Convert an array of bytes to a [`FrameHeader`]
+    ///
+    /// # Safety
+    /// This reinterprets the bytes as a [`FrameHeader`]. It is up to the caller to ensure that the
+    /// bytes are valid.
+    pub unsafe fn from_bytes(bytes: &[u8]) -> Option<Self> {
+        if bytes.len() != std::mem::size_of::<FrameHeader>() {
+            return None;
+        }
+
+        let header: Self = unsafe { std::ptr::read_unaligned(bytes.as_ptr().cast()) };
+
+        if header.message_length() > MAX_RPC_MESSAGE_SIZE {
+            return None;
+        }
+
+        Some(header)
+    }
+
+    #[must_use]
+    /// Get the expected message length
+    pub fn message_length(&self) -> usize {
+        self.length as usize
+    }
+
+    #[must_use]
+    /// Get the opcode
+    pub fn opcode(&self) -> OpCode {
+        self.opcode
+    }
+}
+
+// NOTE: Currently unused
+// Probably remove in future
+// #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+// #[repr(C)]
+// /// Frame passed over the socket
+// ///
+// /// Contains the header and the payload
+// pub struct Frame {
+//     /// The header for the payload
+//     header: FrameHeader,
+//     /// The actual payload
+//     message: [std::os::raw::c_char; MAX_RPC_FRAME_SIZE - std::mem::size_of::<FrameHeader>()],
+// }
+
+// impl From<Frame> for Message {
+//     fn from(header: Frame) -> Self {
+//         Self {
+//             opcode: header.header.opcode,
+//             payload: unsafe { CStr::from_ptr(header.message.as_ptr()) }
+//                 .to_string_lossy()
+//                 .into_owned(),
+//         }
+//     }
+// }
 
 /// Message struct for the Discord RPC
 #[derive(Debug, PartialEq, Eq, Clone)]
