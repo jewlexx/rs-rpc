@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/jewlexx/discord-presence/tree/main)
 
+### Changed
+
+- Removed `tracing` crate in favour of `log`
+
 ## [1.4.1](https://github.com/jewlexx/discord-presence/releases/tag/v1.4.1)
 
 ### Fixed

@@ -17,7 +17,7 @@ pub(crate) static READY: AtomicBool = AtomicBool::new(false);
 extern crate serde;
 
 #[macro_use]
-extern crate tracing;
+extern crate log;
 
 #[macro_use]
 mod macros;
