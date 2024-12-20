@@ -109,9 +109,12 @@ pub trait Connection: Sized {
             return Err(DiscordError::ConnectionClosed);
         }
 
-        let Some(header) = (unsafe { FrameHeader::from_bytes(buf.as_ref()) }) else {
+        if n != std::mem::size_of::<FrameHeader>() {
             return Err(DiscordError::HeaderLength);
-        };
+        }
+
+        // SAFETY: the length of buf is already checked that the header is the correct size
+        let header = unsafe { FrameHeader::from_bytes(buf.as_ref()).unwrap_unchecked() };
 
         let mut message_buf = BytesMut::new();
         message_buf.resize(header.message_length() as usize, 0);
