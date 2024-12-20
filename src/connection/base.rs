@@ -117,7 +117,7 @@ pub trait Connection: Sized {
         let header = unsafe { FrameHeader::from_bytes(buf.as_ref()).unwrap_unchecked() };
 
         let mut message_buf = BytesMut::new();
-        message_buf.resize(header.message_length() as usize, 0);
+        message_buf.resize(header.message_length(), 0);
 
         trace!("Reading payload");
         let n = self.socket().read(&mut message_buf)?;
@@ -127,7 +127,7 @@ pub trait Connection: Sized {
             return Err(DiscordError::NoMessage);
         }
 
-        let mut payload = String::with_capacity(header.message_length() as usize);
+        let mut payload = String::with_capacity(header.message_length());
         message_buf.as_ref().read_to_string(&mut payload)?;
         trace!("<- {:?} = {:?}", header.opcode(), payload);
 
